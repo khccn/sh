@@ -4,21 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>متجر شادن ✨ | للمناسبات والدعوات</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        :root { --primary: #900c3f; --secondary: #c70039; --accent: #ffc300; --bg-color: #fcfafb; --surface: #ffffff; --text-dark: #1a1a1a; --text-light: #666; --border: #eeeeee; --footer-bg: #1a1a1a; }
-        [data-theme="dark"] { --primary: #c70039; --secondary: #ff5733; --accent: #ffc300; --bg-color: #121212; --surface: #1e1e1e; --text-dark: #f5f5f5; --text-light: #aaaaaa; --border: #333333; --footer-bg: #0a0a0a; }
+        /* الألوان الجديدة المستوحاة من شعار شادن */
+        :root {
+            --primary: #7A5230;     /* بني ملكي (لون النص) */
+            --secondary: #966740;   /* بني أفتح للتموجات */
+            --accent: #DDA15E;      /* ذهبي/بيج (لون الأغصان) */
+            --bg-color: #FDFBF7;    /* أبيض كريمي دافئ */
+            --surface: #ffffff;
+            --text-dark: #3E2723;   /* بني غامق جداً للنصوص */
+            --text-light: #8D6E63;
+            --border: #EAE6DF;
+            --footer-bg: #2D1B15;   /* بني ليلي للفوتر */
+        }
+
+        [data-theme="dark"] {
+            --primary: #DDA15E;     
+            --secondary: #E6B981;
+            --accent: #C49A6C; 
+            --bg-color: #1A1210;    /* خلفية ليلية بنية */
+            --surface: #2C1E1A;
+            --text-dark: #F5EFEA;
+            --text-light: #BCAAA4;
+            --border: #4A362F;
+            --footer-bg: #140D0B;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-dark); overflow-x: hidden; transition: background-color 0.3s, color 0.3s; display: flex; flex-direction: column; min-height: 100vh;}
-        button { cursor: pointer; transition: all 0.3s ease; font-family: 'Tajawal', sans-serif;}
+        button { cursor: pointer; transition: all 0.3s ease; }
         
         .navbar { background-color: var(--surface); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; transition: background-color 0.3s; }
-        .logo { font-size: 2rem; font-weight: 900; color: var(--primary); text-decoration: none; }
-        .logo span { color: var(--accent); }
+        
+        /* تعديل الشعار ليصبح صورة */
+        .logo img { height: 60px; object-fit: contain; display: block; }
+        
         .search-container { flex: 1; max-width: 400px; margin: 0 20px; position: relative; }
         .search-input { width: 100%; padding: 10px 15px 10px 40px; border-radius: 25px; border: 1px solid var(--border); background-color: var(--bg-color); color: var(--text-dark); font-size: 1rem; outline: none; transition: 0.3s; }
-        .search-input:focus { border-color: var(--primary); box-shadow: 0 0 8px rgba(144, 12, 63, 0.2); }
+        .search-input:focus { border-color: var(--primary); box-shadow: 0 0 8px rgba(122, 82, 48, 0.2); }
         .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-light); }
         .nav-controls { display: flex; align-items: center; gap: 20px; }
         .theme-toggle { background: none; border: none; font-size: 1.5rem; color: var(--text-dark); }
@@ -26,7 +53,8 @@
         .cart-icon-container i { font-size: 1.5rem; color: var(--primary); }
         .cart-badge { position: absolute; top: 0; right: 0; background-color: var(--accent); color: #1a1a1a; font-size: 0.8rem; font-weight: bold; height: 22px; width: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
 
-        .hero { background: linear-gradient(rgba(144, 12, 63, 0.85), rgba(199, 0, 57, 0.85)), url('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1920&auto=format&fit=crop') center/cover; color: #ffffff; text-align: center; padding: 120px 20px; }
+        /* البانر تم تعديل الألوان لتناسب الهوية */
+        .hero { background: linear-gradient(rgba(45, 27, 21, 0.8), rgba(122, 82, 48, 0.85)), url('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1920&auto=format&fit=crop') center/cover; color: #ffffff; text-align: center; padding: 120px 20px; }
         .hero h1 { font-size: 3.5rem; margin-bottom: 15px; font-weight: 900; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
         .hero p { font-size: 1.3rem; margin-bottom: 30px; opacity: 0.95; }
 
@@ -39,6 +67,8 @@
         .filters { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin: 40px 0 20px; padding: 0 20px; }
         .filter-btn { background-color: var(--surface); color: var(--text-dark); border: 2px solid var(--border); padding: 10px 25px; border-radius: 30px; font-size: 1.1rem; font-weight: bold; }
         .filter-btn.active, .filter-btn:hover { background-color: var(--primary); color: #ffffff; border-color: var(--primary); }
+        [data-theme="dark"] .filter-btn.active { color: #1a1a1a; }
+        
         .main-content { flex: 1; }
         .section-title { text-align: center; margin: 20px 0; font-size: 2.2rem; color: var(--text-dark); }
         .no-results { text-align: center; color: var(--text-light); font-size: 1.2rem; width: 100%; padding: 40px 0; display: none; }
@@ -52,17 +82,21 @@
         .category-tag { position: absolute; top: 15px; right: 15px; background: var(--accent); color: #1a1a1a; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; z-index: 2; }
         .product-info { padding: 20px; text-align: center; }
         .product-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 10px; color: var(--text-dark); cursor: pointer;}
+        .product-title:hover { color: var(--primary); }
         .product-price { font-size: 1.5rem; font-weight: 900; color: var(--primary); margin-bottom: 15px; }
         .btn-add { background-color: var(--primary); color: #ffffff; border: none; padding: 12px 20px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; }
         .btn-add:hover { background-color: var(--secondary); }
+        .btn-add:active { transform: scale(0.95); }
+        [data-theme="dark"] .btn-add { color: #1a1a1a; }
 
         .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 999; opacity: 0; visibility: hidden; transition: 0.3s; }
         .cart-overlay.active { opacity: 1; visibility: visible; }
         .cart-drawer { position: fixed; top: 0; left: -450px; width: 400px; height: 100%; background: var(--surface); z-index: 1000; box-shadow: 5px 0 25px rgba(0,0,0,0.2); transition: 0.4s cubic-bezier(0.82, 0.085, 0.395, 0.895); display: flex; flex-direction: column; max-width: 100%; }
         .cart-drawer.active { left: 0; }
         .cart-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--primary); color: #ffffff; }
+        [data-theme="dark"] .cart-header { color: #1a1a1a; }
         .cart-header h2 { margin: 0; font-size: 1.5rem; }
-        .close-cart { background: none; border: none; color: #ffffff; font-size: 1.5rem; }
+        .close-cart { background: none; border: none; color: inherit; font-size: 1.5rem; }
         .cart-items { flex: 1; overflow-y: auto; padding: 20px; }
         .empty-cart-msg { text-align: center; color: var(--text-light); margin-top: 50px; font-size: 1.2rem; display: none; }
         .cart-item { display: flex; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
@@ -72,6 +106,7 @@
         .item-price { color: var(--primary); font-weight: bold; }
         .item-controls { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
         .qty-btn { width: 30px; height: 30px; border: 1px solid var(--border); background: var(--surface); color: var(--text-dark); border-radius: 5px; font-weight: bold; }
+        .qty-btn:hover { background: var(--border); }
         .remove-btn { color: #dc3545; background: none; border: none; font-size: 1.2rem; margin-right: auto;}
         .cart-footer { padding: 20px; border-top: 1px solid var(--border); background: var(--surface); }
         .cart-total { display: flex; justify-content: space-between; font-size: 1.4rem; font-weight: bold; margin-bottom: 15px; color: var(--text-dark); }
@@ -80,8 +115,10 @@
 
         .footer { background-color: var(--footer-bg); color: #ffffff; padding: 50px 5% 20px; margin-top: auto; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; }
-        .footer-logo { font-size: 2rem; font-weight: 900; color: var(--primary); text-decoration: none; display: block; margin-bottom: 15px;}
-        .footer-logo span { color: var(--accent); }
+        
+        /* تعديل لوجو الفوتر ليظهر بوضوح */
+        .footer-logo img { height: 80px; background: rgba(255,255,255,0.95); padding: 10px; border-radius: 15px; display: block; margin-bottom: 15px; }
+        
         .footer-col h4 { font-size: 1.2rem; margin-bottom: 20px; color: var(--accent); }
         .footer-col p { color: #cccccc; line-height: 1.6; margin-bottom: 10px; }
         .footer-links { list-style: none; }
@@ -92,7 +129,6 @@
         .social-links a { display: flex; justify-content: center; align-items: center; width: 40px; height: 40px; border-radius: 50%; background-color: rgba(255,255,255,0.1); color: #ffffff; text-decoration: none; transition: 0.3s; }
         .social-links a:hover { background-color: var(--primary); transform: translateY(-3px); }
         .footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); color: #999999; font-size: 0.9rem; }
-        
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
         .toast { background: var(--surface); border-right: 5px solid #25d366; color: var(--text-dark); box-shadow: 0 4px 15px rgba(0,0,0,0.2); padding: 15px 20px; border-radius: 8px; font-weight: bold; display: flex; align-items: center; gap: 10px; animation: slideIn 0.3s ease forwards, fadeOut 0.5s ease 2.5s forwards; }
         .toast i { color: #25d366; font-size: 1.2rem; }
@@ -113,7 +149,7 @@
 <body>
 
     <nav class="navbar">
-        <a href="index.html" class="logo">متجر <span>شادن</span></a>
+        <a href="index.html" class="logo"><img src="5304316830020560732.png" alt="متجر شادن"></a>
         <div class="search-container">
             <i class="fas fa-search search-icon"></i>
             <input type="text" id="search-input" class="search-input" placeholder="ابحث عن دعوة، بشارة، أو لعبة..." onkeyup="searchProducts()">
@@ -130,7 +166,7 @@
         <header class="hero">
             <h1>لمسات رقمية تخلد ذكرياتك ✨</h1>
             <p>دعوات زواج، بشارات مواليد، وألعاب ممتعة مصممة خصيصاً لمناسباتكم السعيدة</p>
-            <button class="btn-add" style="width: max-content; margin: 0 auto; padding: 15px 40px; font-size: 1.2rem;" onclick="document.getElementById('products-section').scrollIntoView({behavior: 'smooth'})">تصفح المنتجات</button>
+            <button class="btn-add" style="width: auto; margin: 0 auto; padding: 15px 40px; font-size: 1.2rem;" onclick="document.getElementById('products-section').scrollIntoView({behavior: 'smooth'})">تصفح المنتجات</button>
         </header>
 
         <div class="features">
@@ -158,12 +194,12 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-col">
-                <a href="#" class="footer-logo">متجر <span>شادن</span></a>
+                <a href="index.html" class="footer-logo"><img src="5304316830020560732.png" alt="متجر شادن"></a>
                 <p>وجهتك الأولى للتصاميم الرقمية الفاخرة والمناسبات السعيدة.</p>
                 <div class="social-links">
-                    <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
                     <a href="https://www.snapchat.com/add/iclloudz?share_id=fQJct13eRxY&locale=ar-SA" target="_blank"><i class="fab fa-snapchat"></i></a>
-                    <a href="#" target="_blank"><i class="fab fa-tiktok"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
                 </div>
             </div>
             <div class="footer-col">
@@ -180,7 +216,7 @@
                 <ul class="footer-links">
                     <li><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> متجر رقمي (خدمة عن بعد)</li>
                     <li><i class="fas fa-envelope" style="color:var(--accent);"></i> info@shaden.com</li>
-                    <li><i class="fas fa-phone" style="color:var(--accent);"></i> +966567095886</li>
+                    <li><i class="fas fa-phone" style="color:var(--accent);"></i> +966 56 709 5886</li>
                 </ul>
             </div>
         </div>
@@ -216,7 +252,7 @@
 
         const themeBtn = document.getElementById('theme-btn');
         let isDarkMode = localStorage.getItem('theme') === 'dark';
-        function applyTheme() { if(isDarkMode) { document.body.setAttribute('data-theme', 'dark'); themeBtn.innerHTML = '<i class="fas fa-sun" style="color:var(--accent);"></i>'; } else { document.body.removeAttribute('data-theme'); themeBtn.innerHTML = '<i class="fas fa-moon"></i>'; } }
+        function applyTheme() { if(isDarkMode) { document.body.setAttribute('data-theme', 'dark'); themeBtn.innerHTML = '<i class="fas fa-sun" style="color:var(--text-dark);"></i>'; } else { document.body.removeAttribute('data-theme'); themeBtn.innerHTML = '<i class="fas fa-moon"></i>'; } }
         function toggleTheme() { isDarkMode = !isDarkMode; localStorage.setItem('theme', isDarkMode ? 'dark' : 'light'); applyTheme(); }
 
         function viewProduct(id) { window.location.href = `product.html?id=${id}`; }
@@ -310,9 +346,9 @@
 
         function checkout() {
             if (cart.length === 0) return showToast("سلتك فارغة! أضف منتجات أولاً.");
-            let orderText = "أهلاً متجر شادن \nأرغب بطلب التصاميم الرقمية التالية:\n\n", total = 0;
-            cart.forEach(i => { orderText += ` ${i.name} (الكمية: ${i.quantity})\n`; total += i.price * i.quantity; });
-            orderText += `\n الإجمالي: ${total} ريال\n\nيرجى تزويدي بطرق الدفع المتاحة والبيانات المطلوبة للبدء في التنفيذ. وشكراً `;
+            let orderText = "أهلاً متجر شادن ✨\nأرغب بطلب التصاميم الرقمية التالية:\n\n", total = 0;
+            cart.forEach(i => { orderText += `▪️ ${i.name} (الكمية: ${i.quantity})\n`; total += i.price * i.quantity; });
+            orderText += `\n💰 الإجمالي: ${total} ريال\n\nيرجى تزويدي بطرق الدفع المتاحة والبيانات المطلوبة للبدء في التنفيذ. وشكراً 🌷`;
             window.open(`https://wa.me/966567095886?text=${encodeURIComponent(orderText)}`, '_blank');
             cart = []; saveCart(); updateCartUI(); toggleCart();
         }
