@@ -4,20 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الشروط والأنظمة | متجر شادن ✨</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        :root { --primary: #900c3f; --secondary: #c70039; --accent: #ffc300; --bg-color: #fcfafb; --surface: #ffffff; --text-dark: #1a1a1a; --text-light: #666; --border: #eeeeee; --footer-bg: #1a1a1a; }
-        [data-theme="dark"] { --primary: #c70039; --secondary: #ff5733; --accent: #ffc300; --bg-color: #121212; --surface: #1e1e1e; --text-dark: #f5f5f5; --text-light: #aaaaaa; --border: #333333; --footer-bg: #0a0a0a; }
+        :root { --primary: #7A5230; --secondary: #966740; --accent: #DDA15E; --bg-color: #FDFBF7; --surface: #ffffff; --text-dark: #3E2723; --text-light: #8D6E63; --border: #EAE6DF; --footer-bg: #2D1B15; }
+        [data-theme="dark"] { --primary: #DDA15E; --secondary: #E6B981; --accent: #C49A6C; --bg-color: #1A1210; --surface: #2C1E1A; --text-dark: #F5EFEA; --text-light: #BCAAA4; --border: #4A362F; --footer-bg: #140D0B; }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-dark); transition: background-color 0.3s, color 0.3s; display: flex; flex-direction: column; min-height: 100vh;}
         button { cursor: pointer; transition: all 0.3s ease; }
+
         .navbar { background-color: var(--surface); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 2rem; font-weight: 900; color: var(--primary); text-decoration: none; }
-        .logo span { color: var(--accent); }
+        .logo img { height: 60px; object-fit: contain; display: block; }
         .nav-controls { display: flex; align-items: center; gap: 20px; }
         .theme-toggle { background: none; border: none; font-size: 1.5rem; color: var(--text-dark); }
         .back-btn { background-color: var(--primary); color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+        [data-theme="dark"] .back-btn { color: #1a1a1a; }
+
         .main-content { flex: 1; padding: 60px 20px; display: flex; justify-content: center; align-items: center; }
         
         .about-card { background-color: var(--surface); max-width: 800px; width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); padding: 50px; text-align: right; border: 1px solid var(--border); position: relative; overflow: hidden; }
@@ -29,13 +34,14 @@
         .terms-list h3 { color: var(--primary); margin-bottom: 10px; font-size: 1.3rem; }
         .terms-list p { font-size: 1.1rem; color: var(--text-light); line-height: 1.7; }
         
-        /* السلة والفوتر ثابتة في جميع الصفحات */
+        /* السلة والفوتر */
         .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 999; opacity: 0; visibility: hidden; transition: 0.3s; }
         .cart-overlay.active { opacity: 1; visibility: visible; }
         .cart-drawer { position: fixed; top: 0; left: -450px; width: 400px; height: 100%; background: var(--surface); z-index: 1000; box-shadow: 5px 0 25px rgba(0,0,0,0.2); transition: 0.4s; display: flex; flex-direction: column; max-width: 100%; }
         .cart-drawer.active { left: 0; }
         .cart-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--primary); color: #ffffff; }
-        .close-cart { background: none; border: none; color: #ffffff; font-size: 1.5rem; }
+        [data-theme="dark"] .cart-header { color: #1a1a1a; }
+        .close-cart { background: none; border: none; color: inherit; font-size: 1.5rem; }
         .cart-items { flex: 1; overflow-y: auto; padding: 20px; }
         .cart-item { display: flex; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
         .cart-item img { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; }
@@ -51,25 +57,25 @@
         
         .footer { background-color: var(--footer-bg); color: #ffffff; padding: 50px 5% 20px; margin-top: auto; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; }
-        .footer-logo { font-size: 2rem; font-weight: 900; color: var(--primary); text-decoration: none; display: block; margin-bottom: 15px;}
-        .footer-logo span { color: var(--accent); }
+        .footer-logo img { height: 80px; background: rgba(255,255,255,0.95); padding: 10px; border-radius: 15px; display: block; margin-bottom: 15px; }
         .footer-col h4 { font-size: 1.2rem; margin-bottom: 20px; color: var(--accent); }
         .footer-links { list-style: none; }
         .footer-links li { margin-bottom: 10px; }
         .footer-links a { color: #cccccc; text-decoration: none; transition: 0.3s; display: inline-block;}
+        .footer-links a:hover { color: var(--accent); transform: translateX(-5px);}
         .social-links { display: flex; gap: 15px; margin-top: 20px; }
         .social-links a { display: flex; justify-content: center; align-items: center; width: 40px; height: 40px; border-radius: 50%; background-color: rgba(255,255,255,0.1); color: #ffffff; text-decoration: none; transition: 0.3s; }
         .footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); color: #999999; font-size: 0.9rem; }
         .cart-icon-container { position: relative; cursor: pointer; padding: 10px; }
         .cart-badge { position: absolute; top: 0; right: 0; background-color: var(--accent); color: #1a1a1a; font-size: 0.8rem; font-weight: bold; height: 22px; width: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
-        .toast { background: var(--surface); border-right: 5px solid #25d366; padding: 15px 20px; border-radius: 8px; font-weight: bold; display: flex; align-items: center; gap: 10px; animation: slideIn 0.3s ease forwards, fadeOut 0.5s ease 2.5s forwards; }
+        .toast { background: var(--surface); border-right: 5px solid #25d366; padding: 15px 20px; border-radius: 8px; font-weight: bold; display: flex; align-items: center; gap: 10px; animation: slideIn 0.3s; }
         @media (max-width: 768px) { .about-card { padding: 30px 20px; } .about-card h1 { font-size: 2rem; } }
     </style>
 </head>
 <body>
     <nav class="navbar">
-        <a href="index.html" class="logo">متجر <span>شادن</span></a>
+        <a href="index.html" class="logo"><img src="5304316830020560732.png" alt="متجر شادن"></a>
         <div class="nav-controls">
             <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="تغيير المظهر"><i class="fas fa-moon"></i></button>
             <div class="cart-icon-container" onclick="toggleCart()"><i class="fas fa-shopping-cart"></i><span class="cart-badge" id="cart-badge">0</span></div>
@@ -87,7 +93,7 @@
             <ul class="terms-list">
                 <li><h3><i class="fas fa-check-circle" style="color:var(--accent);"></i> أوقات العمل والتسليم</h3><p>نستقبل طلباتكم على مدار الساعة. يتم تسليم التصاميم الرقمية الجاهزة فوراً، أما الطلبات المخصصة فيتم تسليمها خلال المدة المتفق عليها.</p></li>
                 <li><h3><i class="fas fa-check-circle" style="color:var(--accent);"></i> التعديل على التصميم</h3><p>يُسمح بالتعديل على التصميم الرقمي لعدد محدد من المرات بحسب الباقة المختارة، ولا يمكن إجراء تعديلات جذرية بعد اعتماد الشكل النهائي.</p></li>
-                <li><h3><i class="fas fa-check-circle" style="color:var(--accent);"></i> جودة الملفات الرقمية</h3><p>نسعى دائماً لتوفير تصاميم عالية الدقة. يتم تسليم الدعوات وباقات التهنئة بصيغ مناسبة للمشاركة الفورية (JPG, PDF, أو MP4).</p></li>
+                <li><h3><i class="fas fa-check-circle" style="color:var(--accent);"></i> جودة الملفات الرقمية</h3><p>نسعى دائماً لتوفير تصاميم عالية الدقة. يتم تسليم الدعوات وباقات التهنئة بصيغ مناسبة للمشاركة الفورية.</p></li>
             </ul>
         </div>
     </div>
@@ -105,8 +111,13 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-col">
-                <a href="index.html" class="footer-logo">متجر <span>شادن</span></a>
+                <a href="index.html" class="footer-logo"><img src="5304316830020560732.png" alt="متجر شادن"></a>
                 <p>وجهتك الأولى للتصاميم الرقمية الفاخرة والمناسبات السعيدة.</p>
+                <div class="social-links">
+                    <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.snapchat.com/add/iclloudz" target="_blank"><i class="fab fa-snapchat"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-tiktok"></i></a>
+                </div>
             </div>
             <div class="footer-col">
                 <h4>روابط سريعة</h4>
@@ -117,6 +128,13 @@
                     <li><a href="return.html" target="_blank">سياسة الاسترجاع</a></li>
                 </ul>
             </div>
+            <div class="footer-col">
+                <h4>تواصل معنا</h4>
+                <ul class="footer-links">
+                    <li><i class="fas fa-envelope" style="color:var(--accent);"></i> info@shaden.com</li>
+                    <li><i class="fas fa-phone" style="color:var(--accent);"></i> +966 56 709 5886</li>
+                </ul>
+            </div>
         </div>
         <div class="footer-bottom"><p>جميع الحقوق محفوظة &copy; 2024 لمتجر شادن</p></div>
     </footer>
@@ -124,7 +142,7 @@
 
     <script>
         let cart = JSON.parse(localStorage.getItem('shaden_cart')) || [];
-        function applyTheme() { let isDark = localStorage.getItem('theme') === 'dark'; if(isDark) { document.body.setAttribute('data-theme', 'dark'); document.getElementById('theme-btn').innerHTML = '<i class="fas fa-sun" style="color:var(--accent);"></i>'; } else { document.body.removeAttribute('data-theme'); document.getElementById('theme-btn').innerHTML = '<i class="fas fa-moon"></i>'; } }
+        function applyTheme() { let isDark = localStorage.getItem('theme') === 'dark'; if(isDark) { document.body.setAttribute('data-theme', 'dark'); document.getElementById('theme-btn').innerHTML = '<i class="fas fa-sun" style="color:var(--text-dark);"></i>'; } else { document.body.removeAttribute('data-theme'); document.getElementById('theme-btn').innerHTML = '<i class="fas fa-moon"></i>'; } }
         function toggleTheme() { localStorage.setItem('theme', localStorage.getItem('theme') === 'dark' ? 'light' : 'dark'); applyTheme(); }
         function updateCartUI() {
             const cont = document.getElementById('cart-items');
