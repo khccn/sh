@@ -17,7 +17,8 @@
         button { cursor: pointer; transition: all 0.3s ease; }
 
         .navbar { background-color: var(--surface); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
-        .logo img { height: 60px; object-fit: contain; display: block; }
+        .logo img { height: 70px; object-fit: contain; display: block; mix-blend-mode: multiply; }
+        [data-theme="dark"] .logo img { mix-blend-mode: normal; background-color: #FDFBF7; padding: 5px; border-radius: 10px; }
         .nav-controls { display: flex; align-items: center; gap: 20px; }
         .theme-toggle { background: none; border: none; font-size: 1.5rem; color: var(--text-dark); }
         .back-btn { background-color: var(--primary); color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
@@ -57,7 +58,7 @@
         
         .footer { background-color: var(--footer-bg); color: #ffffff; padding: 50px 5% 20px; margin-top: auto; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; }
-        .footer-logo img { height: 80px; background: rgba(255,255,255,0.95); padding: 10px; border-radius: 15px; display: block; margin-bottom: 15px; }
+        .footer-logo img { height: 80px; background: #FDFBF7; padding: 10px; border-radius: 15px; display: block; margin-bottom: 15px; }
         .footer-col h4 { font-size: 1.2rem; margin-bottom: 20px; color: var(--accent); }
         .footer-links { list-style: none; }
         .footer-links li { margin-bottom: 10px; }
@@ -75,7 +76,7 @@
 </head>
 <body>
     <nav class="navbar">
-        <a href="index.html" class="logo"><img src="5304316830020560732.png" alt="متجر شادن"></a>
+        <a href="index.html" class="logo"><img src="82433.png" alt="متجر شادن"></a>
         <div class="nav-controls">
             <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="تغيير المظهر"><i class="fas fa-moon"></i></button>
             <div class="cart-icon-container" onclick="toggleCart()"><i class="fas fa-shopping-cart"></i><span class="cart-badge" id="cart-badge">0</span></div>
@@ -111,11 +112,11 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-col">
-                <a href="index.html" class="footer-logo"><img src="5304316830020560732.png" alt="متجر شادن"></a>
+                <a href="index.html" class="footer-logo"><img src="82433.png" alt="متجر شادن"></a>
                 <p>وجهتك الأولى للتصاميم الرقمية الفاخرة والمناسبات السعيدة.</p>
                 <div class="social-links">
                     <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-                    <a href="https://www.snapchat.com/add/iclloudz" target="_blank"><i class="fab fa-snapchat"></i></a>
+                    <a href="https://www.snapchat.com/add/iclloudz?share_id=fQJct13eRxY&locale=ar-SA" target="_blank"><i class="fab fa-snapchat"></i></a>
                     <a href="#" target="_blank"><i class="fab fa-tiktok"></i></a>
                 </div>
             </div>
@@ -162,9 +163,9 @@
         function showToast(m) { const t = document.createElement('div'); t.className = 'toast'; t.innerHTML = `<i class="fas fa-check-circle"></i> <span>${m}</span>`; document.getElementById('toast-container').appendChild(t); setTimeout(() => t.remove(), 3000); }
         function checkout() {
             if (cart.length === 0) return showToast("سلتك فارغة!");
-            let txt = "أهلاً متجر شادن ✨\nأرغب بطلب:\n\n", t = 0;
-            cart.forEach(i => { txt += `▪️ ${i.name} (${i.quantity})\n`; t += i.price * i.quantity; });
-            txt += `\n💰 الإجمالي: ${t} ريال\n\nالرجاء تزويدي بالبيانات المطلوبة للتنفيذ.`;
+            let txt = "أهلاً متجر شادن، أرغب بطلب التصاميم التالية:\n\n", t = 0;
+            cart.forEach(i => { txt += `- ${i.name} (الكمية: ${i.quantity})\n`; t += i.price * i.quantity; });
+            txt += `\nالإجمالي: ${t} ريال\n\nالرجاء تزويدي بطرق الدفع والبيانات المطلوبة للبدء في التنفيذ. شكراً لكم.`;
             window.open(`https://wa.me/966567095886?text=${encodeURIComponent(txt)}`, '_blank');
             cart = []; localStorage.setItem('shaden_cart', JSON.stringify(cart)); updateCartUI(); toggleCart();
         }
