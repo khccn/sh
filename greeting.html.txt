@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تهنئة خاصة | متجر شادن ✨</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <style>
+        :root {
+            --primary: #7A5230;     
+            --secondary: #966740;   
+            --accent: #DDA15E;      
+            --bg-color: #FDFBF7;    
+            --surface: #ffffff;
+            --text-dark: #3E2723;   
+            --border: #EAE6DF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); display: flex; flex-direction: column; min-height: 100vh; align-items: center; }
+        
+        .simple-header { background-color: var(--surface); width: 100%; padding: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-bottom: 2px solid var(--accent);}
+        .simple-header img { height: 60px; object-fit: contain; }
+
+        .generator-container { background: var(--surface); max-width: 600px; width: 90%; margin: 40px auto; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; border: 1px solid var(--border); }
+        .generator-title { font-size: 1.8rem; color: var(--primary); margin-bottom: 10px; font-weight: 900; }
+        
+        /* قسم اختيار التصميم */
+        .template-selector { display: flex; gap: 15px; justify-content: center; margin: 25px 0; }
+        .template-option { flex: 1; cursor: pointer; border: 3px solid var(--border); border-radius: 12px; overflow: hidden; transition: 0.3s; position: relative; max-width: 150px; }
+        .template-option img { width: 100%; height: auto; display: block; opacity: 0.7; }
+        .template-option.active { border-color: var(--primary); transform: scale(1.05); box-shadow: 0 5px 15px rgba(122, 82, 48, 0.2); }
+        .template-option.active img { opacity: 1; }
+        .template-label { display: block; padding: 5px; font-size: 0.8rem; background: var(--border); font-weight: bold; }
+        .template-option.active .template-label { background: var(--primary); color: white; }
+
+        .input-group { margin-bottom: 20px; text-align: right; }
+        .input-group label { display: block; font-weight: bold; margin-bottom: 8px; color: var(--text-dark); }
+        .name-input { width: 100%; padding: 15px; border-radius: 10px; border: 2px solid var(--border); font-size: 1.1rem; font-family: 'Tajawal', sans-serif; outline: none; transition: 0.3s; }
+        .name-input:focus { border-color: var(--primary); }
+
+        .btn-generate { background-color: var(--primary); color: #ffffff; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .btn-generate:hover { background-color: var(--secondary); transform: translateY(-3px); }
+
+        .promo-section { background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 100%; padding: 50px 20px; text-align: center; color: white; margin-top: auto; }
+        .promo-title { font-size: 2rem; margin-bottom: 15px; font-weight: 900; }
+        .promo-text { font-size: 1.2rem; margin-bottom: 30px; opacity: 0.9; max-width: 600px; margin: 0 auto 30px auto; line-height: 1.6;}
+        .btn-store { display: inline-block; background-color: var(--accent); color: #1a1a1a; text-decoration: none; padding: 15px 40px; border-radius: 30px; font-weight: 900; font-size: 1.2rem; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        
+        canvas { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="simple-header">
+        <a href="https://shadendesign.com"><img src="82433.png" alt="شادن"></a>
+    </div>
+
+    <div class="generator-container">
+        <h1 class="generator-title">اصنع بطاقتك الآن ✨</h1>
+        <p style="color: #666;">اختر التصميم المفضل واكتب اسمك لتحميل البطاقة</p>
+        
+        <div class="template-selector">
+            <div class="template-option active" onclick="selectTemplate(1, this)">
+                <img src="template1.jpg" alt="التصميم الأول">
+                <span class="template-label">التصميم 1</span>
+            </div>
+            <div class="template-option" onclick="selectTemplate(2, this)">
+                <img src="template2.jpg" alt="التصميم الثاني">
+                <span class="template-label">التصميم 2</span>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="userName">الاسم المراد كتابته:</label>
+            <input type="text" id="userName" class="name-input" placeholder="اكتب اسمك هنا..." maxlength="25">
+        </div>
+
+        <button class="btn-generate" onclick="generateAndDownload()">
+            <i class="fas fa-download"></i> تحميل البطاقة مجاناً
+        </button>
+
+        <canvas id="cardCanvas"></canvas>
+    </div>
+
+    <div class="promo-section">
+        <h2 class="promo-title">هل تبحث عن تصميم يخلّد مناسبتك؟ 🎨</h2>
+        <p class="promo-text">في متجر شادن، نصمم لك دعوات الزواج الإلكترونية، فلاتر السناب شات، والمتاجر.. باحترافية تسعد قلبك!</p>
+        <a href="https://shadendesign.com" class="btn-store"><i class="fas fa-shopping-cart" style="margin-left: 8px;"></i> تصفح خدمات متجر شادن</a>
+    </div>
+
+    <script>
+        let selectedTemplate = 1;
+
+        function selectTemplate(num, element) {
+            selectedTemplate = num;
+            document.querySelectorAll('.template-option').forEach(opt => opt.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        function generateAndDownload() {
+            const name = document.getElementById('userName').value.trim();
+            if(!name) {
+                alert('عذراً، الرجاء كتابة الاسم أولاً!');
+                return;
+            }
+
+            const canvas = document.getElementById('cardCanvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            img.crossOrigin = "Anonymous"; 
+            
+            // اختيار ملف الصورة بناءً على الاختيار
+            img.src = selectedTemplate === 1 ? 'template1.jpg' : 'template2.jpg'; 
+
+            img.onload = () => {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+
+                // إعدادات النص
+                ctx.font = "bold 80px 'Tajawal'"; 
+                ctx.fillStyle = "#7A5230"; 
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+
+                // توزيع النص: يمكنك تغيير هذه القيم لكل تصميم إذا أردت
+                let yPosition = canvas.height / 2 + 150; 
+                
+                // مثال: إذا كان التصميم الثاني يحتاج مكان مختلف للاسم
+                if(selectedTemplate === 2) {
+                    yPosition = canvas.height / 2 + 200; 
+                }
+
+                ctx.fillText(name, canvas.width / 2, yPosition);
+
+                const link = document.createElement('a');
+                link.download = `تهنئة-شادن-${name}.jpg`;
+                link.href = canvas.toDataURL('image/jpeg', 0.9);
+                link.click();
+            };
+
+            img.onerror = () => {
+                alert('خطأ: تأكد من رفع ملفات template1.jpg و template2.jpg على GitHub');
+            };
+        }
+    </script>
+</body>
+</html>
