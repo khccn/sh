@@ -70,7 +70,7 @@
                 <span class="template-label">التصميم 1</span>
             </div>
             <div class="template-option" onclick="selectTemplate(2, this)">
-                <img src="test2.png" alt="التصميم الثاني">
+                <img src="test2.jpeg" alt="التصميم الثاني">
                 <span class="template-label">التصميم 2</span>
             </div>
         </div>
@@ -115,7 +115,7 @@
             img.crossOrigin = "Anonymous"; 
             
             // اختيار ملف الصورة بناءً على الاختيار
-            img.src = selectedTemplate === 1 ? 'test1.png' : 'test2.png'; 
+            img.src = selectedTemplate === 1 ? 'test1.png' : 'test2.jpeg'; 
 
             img.onload = () => {
                 canvas.width = img.width;
