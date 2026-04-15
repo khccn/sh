@@ -81,7 +81,7 @@
         
         <div class="template-selector">
             <div class="template-option active" onclick="selectTemplate(1, this)">
-                <img src="test1.png" alt="التصميم 1">
+                <img src="test3.mp4" alt="التصميم 1">
                 <span class="template-label">التصميم 1</span>
             </div>
             <div class="template-option" onclick="selectTemplate(2, this)">
@@ -150,7 +150,7 @@
             const img = new Image();
             img.crossOrigin = "Anonymous"; 
             
-            img.src = selectedTemplate === 1 ? 'test1.png' : 'test2.png'; 
+            img.src = selectedTemplate === 1 ? 'test3.mp4' : 'test2.png'; 
 
             img.onload = () => {
                 canvas.width = img.width;
