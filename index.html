@@ -33,12 +33,12 @@
             --primary: #DDA15E;     
             --secondary: #E6B981;
             --accent: #C49A6C; 
-            --bg-color: #1A1210;    
-            --surface: #2C1E1A;
+            --bg-color: #2a211e;    /* تعديل: لون خلفية أفتح قليلاً وأكثر نعومة */
+            --surface: #3a2e2a;     /* تعديل: لون البطاقات أفتح لتمييزها عن الخلفية */
             --text-dark: #F5EFEA;
             --text-light: #BCAAA4;
-            --border: #4A362F;
-            --footer-bg: #140D0B;
+            --border: #5a463f;      /* تعديل: إطار أفتح قليلاً */
+            --footer-bg: #1e1614;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
@@ -70,7 +70,26 @@
         .hero h1 { font-size: 3rem; margin-bottom: 10px; font-weight: 900; color: var(--primary); }
         /* هذا سيجعل النص الصغير تحته بلون رمادي غامق ليقرأ بوضوح */
         .hero p { font-size: 1.2rem; margin-bottom: 25px; opacity: 0.9; color: var(--text-dark); }
-        
+        /* تعتيم الهيدر في الوضع الليلي فقط */
+        [data-theme="dark"] .hero {
+        position: relative;
+        }
+        [data-theme="dark"] .hero::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); /* طبقة سوداء شفافة بنسبة 60% */
+            z-index: 1;
+        }
+        [data-theme="dark"] .hero h1,
+        [data-theme="dark"] .hero p,
+        [data-theme="dark"] .hero button {
+            position: relative;
+            z-index: 2; /* إبقاء النصوص والأزرار فوق الطبقة الداكنة */
+        }
+        /* جعل نصوص الهيدر فاتحة في الوضع الليلي لتقرأ بوضوح */
+        [data-theme="dark"] .hero h1 { color: #fdfbf7; }
+        [data-theme="dark"] .hero p { color: #eae6df; }
         .features { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; padding: 30px 5%; background-color: var(--surface); border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); margin-bottom: 40px; }
         .feature-item { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; font-weight: bold; }
         .feature-item i { font-size: 1.5rem; color: var(--primary); }
