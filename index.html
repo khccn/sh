@@ -50,10 +50,6 @@
         
         .logo-container { height: 70px; display: flex; justify-content: center; align-items: center; cursor: pointer; background: transparent; }
         .logo-container img { height: 100%; width: auto; object-fit: contain; }
-        /* إبراز الشعار في الوضع الليلي بتوهج خفيف */
-        [data-theme="dark"] .logo-container img {
-            filter: drop-shadow(0px 0px 10px rgba(255, 255, 255, 0.4)) brightness(1.2);
-        }
         
         .search-container { flex: 1; max-width: 350px; margin: 0 20px; position: relative; }
         .search-input { width: 100%; padding: 10px 15px 10px 40px; border-radius: 25px; border: 1px solid var(--border); background-color: var(--bg-color); color: var(--text-dark); outline: none; }
