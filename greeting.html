@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تهنئة العيد مجانًا | متجر شادن ✨</title>
+    <title>تهنئة العيد مجانًا | متجر بيور ✨</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -23,8 +23,8 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-dark); display: flex; flex-direction: column; min-height: 100vh; align-items: center; }
         
-        .simple-header { background-color: var(--surface); width: 100%; padding: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-bottom: 2px solid var(--accent);}
-        .simple-header img { height: 60px; object-fit: contain; }
+        .simple-header { background-color: var(--surface); width: 100%; padding: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .simple-header img { height: 70px; object-fit: contain; }
 
         .generator-container { background: var(--surface); max-width: 600px; width: 95%; margin: 30px auto; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; border: 1px solid var(--border); position: relative;}
         .generator-title { font-size: 1.8rem; color: var(--primary); margin-bottom: 10px; font-weight: 900; }
@@ -46,7 +46,7 @@
         .btn-generate { background-color: var(--primary); color: #ffffff; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 25px;}
         .btn-generate:hover { background-color: var(--secondary); transform: translateY(-2px); }
 
-        /* === شريط الخدمات السريع الجديد === */
+        /* === شريط الخدمات السريع === */
         .quick-services-bar { border-top: 2px dashed var(--border); padding-top: 25px; margin-top: 10px; }
         .quick-services-title { font-size: 1rem; font-weight: 800; color: var(--secondary); margin-bottom: 15px; display: block; }
         .services-icons-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
@@ -72,7 +72,7 @@
 <body>
 
     <div class="simple-header">
-        <a href="https://shadendesign.com"><img src="82433.png" alt="شادن"></a>
+        <a href="index.html"><img src="82433.png" alt="بيور"></a>
     </div>
 
     <div class="generator-container">
@@ -99,21 +99,21 @@
         </button>
 
         <div class="quick-services-bar">
-            <span class="quick-services-title">اكتشف خدمات متجر شادن 🦌</span>
+            <span class="quick-services-title">اكتشف خدمات متجر بيور ✨</span>
             <div class="services-icons-grid">
-                <a href="https://shadendesign.com" class="service-icon-item">
+                <a href="index.html" class="service-icon-item">
                     <div class="icon-circle"><i class="fas fa-store"></i></div>
                     <span class="service-label">متاجر</span>
                 </a>
-                <a href="https://shadendesign.com" class="service-icon-item">
+                <a href="index.html" class="service-icon-item">
                     <div class="icon-circle"><i class="fas fa-file-invoice"></i></div>
                     <span class="service-label">CV</span>
                 </a>
-                <a href="https://shadendesign.com" class="service-icon-item">
+                <a href="index.html" class="service-icon-item">
                     <div class="icon-circle"><i class="fas fa-ghost"></i></div>
                     <span class="service-label">فلاتر</span>
                 </a>
-                <a href="https://shadendesign.com" class="service-icon-item">
+                <a href="index.html" class="service-icon-item">
                     <div class="icon-circle"><i class="fas fa-envelope-open-text"></i></div>
                     <span class="service-label">دعوات</span>
                 </a>
@@ -124,7 +124,7 @@
     <div class="promo-section">
         <h2 class="promo-title">تصاميم تخلّد ذكرياتكم 🎨</h2>
         <p class="promo-text">نحن هنا لنجعل مناسباتكم أكثر أناقة واحترافية بمجموعة واسعة من الخدمات الرقمية.</p>
-        <a href="https://shadendesign.com" class="btn-store"><i class="fas fa-external-link-alt" style="margin-left: 8px;"></i> انتقل لمتجر شادن الرئيسي</a>
+        <a href="index.html" class="btn-store"><i class="fas fa-external-link-alt" style="margin-left: 8px;"></i> انتقل لمتجر بيور الرئيسي</a>
     </div>
 
     <canvas id="cardCanvas"></canvas>
@@ -169,7 +169,7 @@
                 ctx.fillText(name, canvas.width / 2, yPosition);
 
                 const link = document.createElement('a');
-                link.download = `تهنئة-شادن-${name}.jpg`;
+                link.download = `تهنئة-بيور-${name}.jpg`;
                 link.href = canvas.toDataURL('image/jpeg', 0.9);
                 link.click();
             };
