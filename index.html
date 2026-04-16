@@ -704,6 +704,36 @@
         }
 
         window.onload = () => { applyTheme(); renderProducts(); updateCartUI(); };
+        </script>
+        <script type="module">
+        import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        const productsToUpload = [
+            { id: 5, name: "إنشاء متجر إلكتروني", category: "متاجر", price: 250, oldPrice: 350, image: "Market.jpg", desc: "خدمة متكاملة لإنشاء وتصميم متجرك الإلكتروني بأحدث التقنيات لتبدأ تجارتك فوراً.", hasOptions: true, options: [{ id: "opt1", name: "متجر إلكتروني مع التصميم والإنشاء", price: 250, oldPrice: 350 }, { id: "opt2", name: "متجر إلكتروني مع التصميم والإنشاء - احترافي", price: 400, oldPrice: 500 }] },
+            { id: 6, name: "كتابة وتنسيق سيرة ذاتية (CV)", category: "خدمات", price: 25, oldPrice: 40, image: "cv.png", desc: "تصميم وكتابة سيرة ذاتية احترافية تتوافق مع أنظمة الفرز الآلي (ATS) لزيادة فرص قبولك الوظيفي.", hasOptions: true, options: [{ id: "opt1", name: "لغة واحدة (عربي أو إنجليزي)", price: 25, oldPrice: 40 }, { id: "opt2", name: "لغتين (عربي وإنجليزي)", price: 35, oldPrice: 50 }] },
+            { id: 7, name: "تصميم فلتر سناب شات", category: "خدمات", price: 50, oldPrice: 80, image: "Snap.png", desc: "تصميم فلتر سناب شات حصري لمناسبتك السعيدة، بتصميم احترافي يضيف لمسة سحرية لتوثيق ذكرياتكم.", hasOptions: false },
+            { id: 1, name: "لعبة تخمين جنس الجنين", category: "ألعاب", price: 50, oldPrice: 75, image: "Game.jpg", desc: "لعبة رقمية تفاعلية ممتعة لمشاركة العائلة والأصدقاء لحظة الكشف عن جنس الجنين.", hasOptions: false },
+            { id: 2, name: "دعوة زواج إلكترونية", category: "دعوات", price: 25, oldPrice: 40, image: "Wedding.jpg", desc: "دعوة زواج رقمية بتصميم فاخر ومتحرك، جاهزة للمشاركة عبر الواتساب.", hasOptions: false },
+            { id: 3, name: "بطاقة معايدة فاخرة", category: "بطاقات", price: 15, oldPrice: 25, image: "Eid.jpg", desc: "بطاقة معايدة بتصميم حصري مع إمكانية كتابة رسالتك الخاصة بأسلوب أنيق.", hasOptions: false },
+            { id: 4, name: "بشارة مولود", category: "بشارات", price: 20, oldPrice: 35, image: "Born.jpg", desc: "بشارة قدوم مولود جديد بتصميم ملائكي ناعم يخلد هذه اللحظة السعيدة.", hasOptions: false }
+        ];
+
+        async function uploadData() {
+            try {
+                for (let i = 0; i < productsToUpload.length; i++) {
+                    const product = productsToUpload[i];
+                    // استخدام رقم المنتج كـ ID في قاعدة البيانات
+                    await setDoc(doc(window.db, "products", product.id.toString()), product);
+                }
+                alert("🎉 مبروك! تم رفع جميع منتجات بيور إلى قاعدة بيانات قوقل بنجاح.. يرجى الآن العودة لـ GitHub وحذف كود الرفع السحري.");
+            } catch (error) {
+                console.error("حدث خطأ:", error);
+                alert("عذراً، حدث خطأ أثناء الرفع: " + error.message);
+            }
+        }
+
+        // تشغيل الرفع تلقائياً عند فتح الصفحة
+        setTimeout(uploadData, 2000); 
     </script>
 </body>
 </html>
