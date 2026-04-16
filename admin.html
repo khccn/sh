@@ -61,7 +61,6 @@
     import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-    // إعداداتك
     const firebaseConfig = {
         apiKey: "AIzaSyArRTcygI2dadObLCWPSVxOfC3gkBjyHHo",
         authDomain: "pure-design-de0f7.firebaseapp.com",
@@ -75,7 +74,6 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // دالة تسجيل الدخول
     window.checkPass = async function() {
         const email = document.getElementById('admin-email').value;
         const pass = document.getElementById('admin-pass').value;
@@ -85,17 +83,16 @@
         try {
             await signInWithEmailAndPassword(auth, email, pass);
             document.getElementById('login-overlay').style.display = 'none';
-            loadData(); // تحميل البيانات بعد نجاح الدخول
+            loadData();
         } catch (error) {
             alert("البريد الإلكتروني أو كلمة المرور غير صحيحة!");
             btn.innerText = "تسجيل الدخول";
         }
     }
 
-    // دالة سحب البيانات (المحدثة بدون تعقيدات الفهرسة)
     async function loadData() {
         try {
-            // 1. سحب المنتجات أولاً
+            // سحب المنتجات
             const productsSnap = await getDocs(collection(db, "products"));
             const tbody = document.getElementById('products-body');
             tbody.innerHTML = "";
@@ -109,12 +106,11 @@
                     </tr>`;
             });
 
-            // 2. سحب الطلبات وترتيبها برمجياً
+            // سحب الطلبات
             const ordersSnap = await getDocs(collection(db, "orders"));
             let ordersArray = [];
             ordersSnap.forEach(doc => ordersArray.push({ id: doc.id, ...doc.data() }));
 
-            // ترتيب الطلبات (الأحدث أولاً)
             ordersArray.sort((a, b) => {
                 const timeA = a.createdAt ? a.createdAt.toMillis() : 0;
                 const timeB = b.createdAt ? b.createdAt.toMillis() : 0;
@@ -128,8 +124,11 @@
             } else {
                 ordersArray.forEach(data => {
                     const date = data.createdAt ? data.createdAt.toDate().toLocaleString('ar-SA') : 'جديد';
-                    const shortId = data.id.substring(0, 5).toUpperCase();
-                    ordersHtml += `<tr><td>${date}</td><td style="color:var(--primary); font-weight:bold;">${data.total}</td><td>#${shortId}</td></tr>`;
+                    
+                    // 🌟 قراءة الرقم الجديد، وإذا كان طلباً قديماً يعرض الحروف لكي لا يختفي
+                    const orderNum = data.orderNumber ? data.orderNumber : data.id.substring(0, 5).toUpperCase();
+                    
+                    ordersHtml += `<tr><td>${date}</td><td style="color:var(--primary); font-weight:bold;">${data.total}</td><td style="font-family: monospace; font-size: 1.1em;">#${orderNum}</td></tr>`;
                 });
                 ordersHtml += "</table>";
             }
@@ -141,7 +140,6 @@
         }
     }
 
-    // دالة تحديث السعر
     window.updatePrice = async function(id) {
         const newPrice = document.getElementById(`price-${id}`).value;
         const btn = event.currentTarget;
