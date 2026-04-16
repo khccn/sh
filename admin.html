@@ -57,10 +57,16 @@
         <h3><i class="fas fa-edit"></i> تعديل المنتج</h3>
         <input type="hidden" id="edit-p-id">
         <input type="text" id="edit-p-name" placeholder="اسم المنتج" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;">
-        <input type="number" id="edit-p-price" placeholder="السعر" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;">
+        
+        <div style="display: flex; gap: 10px; margin-bottom:10px;">
+            <input type="number" id="edit-p-price" placeholder="السعر الحالي" style="width:50%; padding:12px; border:1px solid #ddd; border-radius:8px;">
+            <input type="number" id="edit-p-old-price" placeholder="السعر السابق (اختياري)" style="width:50%; padding:12px; border:1px solid #ddd; border-radius:8px;">
+        </div>
+
         <input type="text" id="edit-p-cat" placeholder="القسم" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;">
         <input type="text" id="edit-p-img" placeholder="اسم الصورة" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;">
         <textarea id="edit-p-desc" placeholder="الوصف" style="width:100%; padding:12px; margin-bottom:15px; border:1px solid #ddd; border-radius:8px; height:80px;"></textarea>
+        
         <button onclick="saveProductEdit()" style="width:100%; padding:12px; background:var(--success); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold; margin-bottom:10px;">حفظ التعديلات</button>
         <button onclick="closeModal('edit-modal-overlay')" style="width:100%; padding:12px; background:#eee; color:#333; border:none; border-radius:8px; cursor:pointer;">إلغاء</button>
     </div>
@@ -79,14 +85,15 @@
     <div class="header">
         <button class="logout-btn" onclick="logout()">خروج</button>
         <img src="82433.png" class="admin-logo">
-        <h1>لـوحـة الـتـحـكـم</h1>
+        <h1>لوحة التحكم</h1>
     </div>
 
     <div class="card">
         <h3><i class="fas fa-plus-circle"></i> إضافة منتج جديد</h3>
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px;">
             <input type="text" id="new-p-name" placeholder="اسم المنتج" style="padding:12px; border:1px solid #ddd; border-radius:8px;">
-            <input type="number" id="new-p-price" placeholder="السعر" style="padding:12px; border:1px solid #ddd; border-radius:8px;">
+            <input type="number" id="new-p-price" placeholder="السعر الحالي" style="padding:12px; border:1px solid #ddd; border-radius:8px;">
+            <input type="number" id="new-p-old-price" placeholder="السعر السابق (اختياري - للخصومات)" style="padding:12px; border:1px solid #ddd; border-radius:8px;">
             <input list="cats" id="new-p-cat" placeholder="القسم" style="padding:12px; border:1px solid #ddd; border-radius:8px;">
             <datalist id="cats"><option value="خدمات رقمية"><option value="بشارات"><option value="دعوات"></datalist>
             <input type="text" id="new-p-img" placeholder="اسم الصورة" style="padding:12px; border:1px solid #ddd; border-radius:8px;">
@@ -174,7 +181,10 @@
             <tr style="opacity: ${p.isHidden ? '0.5' : '1'}">
                 <td>${p.name} ${p.isHidden ? '<small>(مخفي)</small>' : ''}</td>
                 <td><span class="status-badge" style="background:#eee">${p.category}</span></td>
-                <td><b>${p.price} ريال</b></td>
+                <td>
+                    <b>${p.price} ريال</b>
+                    ${p.oldPrice ? `<br><del style="color:#e74c3c; font-size:12px;">${p.oldPrice} ريال</del>` : ''}
+                </td>
                 <td>
                     <button class="btn-circle" style="background:var(--blue)" onclick="openEditModal('${p.docId}')"><i class="fas fa-pen"></i></button>
                     <button class="btn-circle" style="background:${p.isHidden ? '#999' : 'var(--warning)'}" onclick="toggleHide('${p.docId}', ${p.isHidden})"><i class="fas ${p.isHidden ? 'fa-eye-slash' : 'fa-eye'}"></i></button>
@@ -199,11 +209,8 @@
                 <td style="color:var(--success)"><b>${o.total}</b></td>
                 <td style="white-space: nowrap;">
                     <span class="status-badge ${o.status === 'مكتمل' ? 'status-done' : 'status-new'}">${o.status || 'جديد'}</span>
-                    
                     <button class="btn-circle" style="background:var(--success)" title="تم التنفيذ" onclick="updateStatus('${o.docId}', 'مكتمل')"><i class="fas fa-check"></i></button>
-                    
                     <button class="btn-circle" style="background:var(--warning)" title="تراجع (إعادة لجديد)" onclick="updateStatus('${o.docId}', 'جديد')"><i class="fas fa-times"></i></button>
-                    
                     <button class="btn-circle" style="background:var(--danger)" title="حذف الطلب" onclick="deleteOrder('${o.docId}')"><i class="fas fa-trash"></i></button>
                 </td>
             </tr>
@@ -214,9 +221,7 @@
         const o = window.allOrders.find(x => x.docId === id);
         document.getElementById('modal-order-title').innerText = "تفاصيل طلب #" + (o.orderNumber || id.substring(0,5));
         let html = "";
-        o.items.forEach(item => {
-            html += `<div class="order-item-row"><span>${item.name} (x${item.quantity})</span><b>${item.price * item.quantity} ريال</b></div>`;
-        });
+        o.items.forEach(item => { html += `<div class="order-item-row"><span>${item.name} (x${item.quantity})</span><b>${item.price * item.quantity} ريال</b></div>`; });
         html += `<div style="margin-top:15px; text-align:left; font-size:1.2em; color:var(--primary)"><b>الإجمالي: ${o.total}</b></div>`;
         document.getElementById('order-details-content').innerHTML = html;
         document.getElementById('order-modal-overlay').style.display = 'flex';
@@ -224,7 +229,9 @@
 
     window.closeModal = (id) => document.getElementById(id).style.display = 'none';
 
+    // 🌟 إضافة منتج مع السعر السابق
     window.addNewProduct = async () => {
+        const oldPriceVal = document.getElementById('new-p-old-price').value;
         const data = {
             id: Math.floor(10000 + Math.random() * 90000),
             name: document.getElementById('new-p-name').value,
@@ -234,8 +241,15 @@
             desc: document.getElementById('new-p-desc').value,
             isHidden: false, hasOptions: false
         };
+        
+        // إذا كتب سعر سابق، أضفه للبيانات
+        if(oldPriceVal) data.oldPrice = Number(oldPriceVal);
+
         await addDoc(collection(db, "products"), data);
-        alert("تمت الإضافة!"); loadData();
+        
+        // تفريغ الخانات
+        ['new-p-name', 'new-p-price', 'new-p-old-price', 'new-p-cat', 'new-p-img', 'new-p-desc'].forEach(id => document.getElementById(id).value = '');
+        alert("تمت الإضافة بنجاح!"); loadData();
     };
 
     window.toggleHide = async (id, current) => { await updateDoc(doc(db, "products", id), {isHidden: !current}); loadData(); };
@@ -243,26 +257,35 @@
     window.deleteOrder = async (id) => { if(confirm("حذف الطلب نهائياً؟")) { await deleteDoc(doc(db, "orders", id)); loadData(); } };
     window.deleteProduct = async (id) => { if(confirm("حذف المنتج نهائياً؟")) { await deleteDoc(doc(db, "products", id)); loadData(); } };
 
+    // 🌟 فتح نافذة التعديل مع السعر السابق
     window.openEditModal = (id) => {
         const p = window.allProducts.find(x => x.docId === id);
         document.getElementById('edit-p-id').value = id;
         document.getElementById('edit-p-name').value = p.name;
         document.getElementById('edit-p-price').value = p.price;
+        document.getElementById('edit-p-old-price').value = p.oldPrice || ''; // جلب السعر القديم إن وجد
         document.getElementById('edit-p-cat').value = p.category;
         document.getElementById('edit-p-img').value = p.image;
         document.getElementById('edit-p-desc').value = p.desc;
         document.getElementById('edit-modal-overlay').style.display = 'flex';
     };
 
+    // 🌟 حفظ التعديلات
     window.saveProductEdit = async () => {
         const id = document.getElementById('edit-p-id').value;
-        await updateDoc(doc(db, "products", id), {
+        const oldPriceVal = document.getElementById('edit-p-old-price').value;
+        
+        const updateData = {
             name: document.getElementById('edit-p-name').value,
             price: Number(document.getElementById('edit-p-price').value),
             category: document.getElementById('edit-p-cat').value,
             image: document.getElementById('edit-p-img').value,
-            desc: document.getElementById('edit-p-desc').value
-        });
+            desc: document.getElementById('edit-p-desc').value,
+            // تحديث السعر القديم أو حذفه إذا تُركت الخانة فارغة
+            oldPrice: oldPriceVal ? Number(oldPriceVal) : null
+        };
+
+        await updateDoc(doc(db, "products", id), updateData);
         closeModal('edit-modal-overlay'); loadData();
     };
 </script>
