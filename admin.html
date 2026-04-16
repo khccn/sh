@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم - بيور ديزاين</title>
-    <link rel="icon" href="888888.png" type="image/png">
+    <title>غرفة العمليات - بيور ديزاين</title>
+    <link rel="icon" href="82433.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #8e735b; --bg: #f8f5f2; --text: #2d3436; --white: #ffffff; --success: #27ae60; --danger: #d63031; --warning: #f39c12; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--text); }
         .container { max-width: 1100px; margin: 0 auto; display: none; }
         
-        /* تنسيق الهيدر مع الشعار */
         .header { text-align: center; margin-bottom: 30px; position: relative; }
         .admin-logo { width: 120px; margin-bottom: 10px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1)); }
         .logout-btn { position: absolute; left: 0; top: 10px; background: var(--danger); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
@@ -40,6 +39,10 @@
 
         #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 2000; }
         .login-box { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); text-align: center; width: 320px; }
+
+        /* تنسيق نافذة التعديل المنبثقة */
+        #edit-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 3000; backdrop-filter: blur(5px); }
+        .edit-box { background: white; padding: 30px; border-radius: 15px; width: 400px; max-width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; flex-direction: column; gap: 12px; }
     </style>
 </head>
 <body>
@@ -54,11 +57,28 @@
     </div>
 </div>
 
+<div id="edit-modal-overlay">
+    <div class="edit-box">
+        <h3 style="margin-bottom: 10px;"><i class="fas fa-edit"></i> تعديل بيانات المنتج</h3>
+        <input type="hidden" id="edit-p-id">
+        <input type="text" id="edit-p-name" placeholder="اسم المنتج">
+        <input type="number" id="edit-p-price" placeholder="السعر">
+        <input type="text" id="edit-p-cat" placeholder="القسم">
+        <input type="text" id="edit-p-img" placeholder="اسم الصورة">
+        <textarea id="edit-p-desc" placeholder="الوصف" style="min-height: 80px;"></textarea>
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+            <button class="btn btn-edit" style="flex: 1; justify-content: center;" onclick="saveProductEdit()"><i class="fas fa-save"></i> حفظ التعديلات</button>
+            <button class="btn" style="flex: 1; justify-content: center; background: #ccc; color: #333;" onclick="closeEditModal()"><i class="fas fa-times"></i> إلغاء</button>
+        </div>
+    </div>
+</div>
+
 <div class="container" id="main-content">
     <div class="header">
         <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> خروج</button>
         <img src="82433.png" alt="Logo" class="admin-logo">
         <h1>لوحة التحكم</h1>
+        <p>إدارة متجر بيور ديزاين</p>
     </div>
 
     <div class="card">
@@ -119,6 +139,8 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
+    window.allProducts = []; // 🌟 مصفوفة ذكية لحفظ بيانات المنتجات لتسهيل التعديل
+
     window.handleEnter = function(e) { if (e.key === 'Enter') checkPass(); }
 
     onAuthStateChanged(auth, (user) => {
@@ -145,14 +167,18 @@
         const pSnap = await getDocs(collection(db, "products"));
         const pBody = document.getElementById('products-body');
         pBody.innerHTML = "";
+        window.allProducts = []; // تصفير المصفوفة
+
         pSnap.forEach(d => {
             const p = d.data();
+            window.allProducts.push({ docId: d.id, ...p }); // حفظ البيانات لاستخدامها وقت التعديل
+            
             pBody.innerHTML += `<tr>
                 <td><strong>${p.name}</strong></td>
                 <td><span class="status-badge" style="background:#eee;">${p.category}</span></td>
-                <td><input type="number" id="pr-${d.id}" value="${p.price}" style="width:70px; text-align:center;"></td>
+                <td style="font-weight:bold; color:var(--primary);">${p.price} ريال</td>
                 <td class="action-btns">
-                    <button class="btn-circle btn-edit" title="حفظ السعر" onclick="updatePrice('${d.id}')"><i class="fas fa-save"></i></button>
+                    <button class="btn-circle btn-edit" title="تعديل شامل" onclick="openEditModal('${d.id}')"><i class="fas fa-pen"></i></button>
                     <button class="btn-circle" style="background:var(--danger); color:white" title="حذف" onclick="deleteProduct('${d.id}')"><i class="fas fa-trash"></i></button>
                 </td>
             </tr>`;
@@ -184,6 +210,52 @@
         document.getElementById('orders-list').innerHTML = html + "</table>";
     }
 
+    // 🌟 وظائف التعديل الشامل الجديدة 🌟
+    window.openEditModal = function(docId) {
+        // البحث عن بيانات المنتج من المصفوفة الذكية
+        const p = window.allProducts.find(x => x.docId === docId);
+        if(!p) return;
+        
+        // تعبئة البيانات في النافذة
+        document.getElementById('edit-p-id').value = docId;
+        document.getElementById('edit-p-name').value = p.name || '';
+        document.getElementById('edit-p-price').value = p.price || '';
+        document.getElementById('edit-p-cat').value = p.category || '';
+        document.getElementById('edit-p-img').value = p.image || '';
+        document.getElementById('edit-p-desc').value = p.desc || '';
+        
+        // إظهار النافذة
+        document.getElementById('edit-modal-overlay').style.display = 'flex';
+    }
+
+    window.closeEditModal = function() {
+        document.getElementById('edit-modal-overlay').style.display = 'none';
+    }
+
+    window.saveProductEdit = async function() {
+        const id = document.getElementById('edit-p-id').value;
+        const btn = event.currentTarget;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> جاري الحفظ...";
+
+        try {
+            await updateDoc(doc(db, "products", id), {
+                name: document.getElementById('edit-p-name').value,
+                price: Number(document.getElementById('edit-p-price').value),
+                category: document.getElementById('edit-p-cat').value,
+                image: document.getElementById('edit-p-img').value,
+                desc: document.getElementById('edit-p-desc').value
+            });
+            
+            closeEditModal();
+            loadData(); // تحديث الجدول فوراً
+            alert("تم حفظ التعديلات بنجاح! سينعكس ذلك في المتجر فوراً ✨");
+        } catch(e) {
+            alert("حدث خطأ أثناء حفظ التعديلات.");
+            btn.innerHTML = originalText;
+        }
+    }
+
     window.addNewProduct = async function() {
         const name = document.getElementById('new-p-name').value;
         const price = document.getElementById('new-p-price').value;
@@ -198,15 +270,17 @@
                 id: Math.floor(10000 + Math.random() * 90000),
                 name, price: Number(price), category: cat, image: img, desc: desc || "لا يوجد وصف.", hasOptions: false
             });
+            
+            // تفريغ الخانات بعد الإضافة
+            document.getElementById('new-p-name').value = '';
+            document.getElementById('new-p-price').value = '';
+            document.getElementById('new-p-cat').value = '';
+            document.getElementById('new-p-img').value = '';
+            document.getElementById('new-p-desc').value = '';
+            
             alert("تمت الإضافة بنجاح!");
             loadData();
         } catch(e) { alert("حدث خطأ!"); }
-    }
-
-    window.updatePrice = async function(id) {
-        const np = document.getElementById('pr-'+id).value;
-        await updateDoc(doc(db, "products", id), { price: Number(np) });
-        alert("تم تحديث السعر!");
     }
 
     window.updateStatus = async function(id, newStatus) {
@@ -215,7 +289,10 @@
     }
 
     window.deleteProduct = async function(id) {
-        if(confirm("حذف نهائي؟")) { await deleteDoc(doc(db, "products", id)); loadData(); }
+        if(confirm("هل أنت متأكد من حذف هذا المنتج نهائياً؟")) { 
+            await deleteDoc(doc(db, "products", id)); 
+            loadData(); 
+        }
     }
 </script>
 </body>
