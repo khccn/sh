@@ -58,7 +58,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, updateDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
     // إعداداتك
@@ -92,25 +92,10 @@
         }
     }
 
-    // دالة سحب البيانات
+    // دالة سحب البيانات (المحدثة بدون تعقيدات الفهرسة)
     async function loadData() {
         try {
-            // سحب الطلبات (الأحدث أولاً)
-            const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
-            const ordersSnap = await getDocs(q);
-            let ordersHtml = "<table><tr><th>تاريخ الطلب</th><th>الإجمالي</th><th>رقم الطلب</th></tr>";
-            
-            if(ordersSnap.empty) { ordersHtml = "<p style='color:#666;'>لا توجد طلبات حتى الآن.</p>"; }
-            
-            ordersSnap.forEach(doc => {
-                const data = doc.data();
-                const date = data.createdAt ? data.createdAt.toDate().toLocaleString('ar-SA') : 'جديد';
-                const shortId = doc.id.substring(0, 5).toUpperCase();
-                ordersHtml += `<tr><td>${date}</td><td style="color:var(--primary); font-weight:bold;">${data.total}</td><td>#${shortId}</td></tr>`;
-            });
-            document.getElementById('orders-list').innerHTML = ordersHtml + (ordersSnap.empty ? "" : "</table>");
-
-            // سحب المنتجات
+            // 1. سحب المنتجات أولاً
             const productsSnap = await getDocs(collection(db, "products"));
             const tbody = document.getElementById('products-body');
             tbody.innerHTML = "";
@@ -123,20 +108,54 @@
                         <td><button class="btn btn-edit" onclick="updatePrice('${productDoc.id}')"><i class="fas fa-save"></i> حفظ السعر</button></td>
                     </tr>`;
             });
+
+            // 2. سحب الطلبات وترتيبها برمجياً
+            const ordersSnap = await getDocs(collection(db, "orders"));
+            let ordersArray = [];
+            ordersSnap.forEach(doc => ordersArray.push({ id: doc.id, ...doc.data() }));
+
+            // ترتيب الطلبات (الأحدث أولاً)
+            ordersArray.sort((a, b) => {
+                const timeA = a.createdAt ? a.createdAt.toMillis() : 0;
+                const timeB = b.createdAt ? b.createdAt.toMillis() : 0;
+                return timeB - timeA;
+            });
+
+            let ordersHtml = "<table><tr><th>تاريخ الطلب</th><th>الإجمالي</th><th>رقم الطلب</th></tr>";
+            
+            if(ordersArray.length === 0) { 
+                ordersHtml = "<p style='color:#666; text-align:center;'>لا توجد طلبات حتى الآن.</p>"; 
+            } else {
+                ordersArray.forEach(data => {
+                    const date = data.createdAt ? data.createdAt.toDate().toLocaleString('ar-SA') : 'جديد';
+                    const shortId = data.id.substring(0, 5).toUpperCase();
+                    ordersHtml += `<tr><td>${date}</td><td style="color:var(--primary); font-weight:bold;">${data.total}</td><td>#${shortId}</td></tr>`;
+                });
+                ordersHtml += "</table>";
+            }
+            document.getElementById('orders-list').innerHTML = ordersHtml;
+
         } catch(e) {
             console.error(e);
-            alert("حدث خطأ في جلب البيانات.");
+            alert("حدث خطأ بسيط في جلب البيانات، يرجى تحديث الصفحة.");
         }
     }
 
     // دالة تحديث السعر
     window.updatePrice = async function(id) {
         const newPrice = document.getElementById(`price-${id}`).value;
+        const btn = event.currentTarget;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> جاري...";
+        
         try {
             await updateDoc(doc(db, "products", id), { price: Number(newPrice) });
-            alert("تم تحديث السعر بنجاح! سينعكس في المتجر فوراً ✨");
+            btn.innerHTML = "<i class='fas fa-check'></i> تم!";
+            btn.style.background = "#27ae60";
+            setTimeout(() => { btn.innerHTML = originalText; btn.style.background = "var(--primary)"; }, 2000);
         } catch(e) {
             alert("فشل التحديث، تأكد أنك تملك صلاحية التعديل.");
+            btn.innerHTML = originalText;
         }
     }
 </script>
