@@ -394,7 +394,7 @@
     <script type="module">
         // 1. استدعاء مكتبات Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         // 2. تهيئة الاتصال باستخدام المفاتيح التي أرسلتها
         const firebaseConfig = {
@@ -676,16 +676,45 @@
             setTimeout(() => t.remove(), 3000); 
         }
 
-        function checkout() {
+        async function checkout() {
             if (cart.length === 0) { showToast("السلة فارغة!"); return; }
-            let msg = "أهلا متجر بيور، أرغب بطلب الخدمات والتصاميم التالية:\n\n";
-            cart.forEach(i => {
-                msg += `- ${i.name} (الكمية: ${i.quantity})\n`;
-            });
-            msg += `\nالإجمالي: ${document.getElementById('cart-total-price').innerText}\n\nالرجاء تزويدي بطرق الدفع والبيانات المطلوبة للبدء في التنفيذ. شكراً لكم.`;
-            window.open(`https://wa.me/966548774184?text=${encodeURIComponent(msg)}`, '_blank');
-        }
 
+            // 1. تجهيز بيانات الطلب لقاعدة البيانات
+            const orderData = {
+                items: cart,
+                total: document.getElementById('cart-total-price').innerText,
+                status: "جديد",
+                createdAt: serverTimestamp()
+            };
+
+            try {
+                showToast("جاري تسجيل طلبك... ⏳");
+                
+                // 2. حفظ الطلب في Firebase (مجموعة اسمها orders)
+                const docRef = await window.addDoc(window.collection(window.db, "orders"), orderData);
+                const orderId = docRef.id.substring(0, 5).toUpperCase(); // إنشاء رقم طلب مختصر
+
+                // 3. تجهيز رسالة الواتساب مع رقم الطلب الجديد
+                let msg = `طلب جديد من المتجر ✨\nرقم الطلب: #${orderId}\n\nالخدمات المطلوبة:\n`;
+                cart.forEach(i => {
+                    msg += `- ${i.name} (الكمية: ${i.quantity})\n`;
+                });
+                msg += `\nالإجمالي: ${orderData.total}\n\nالرجاء تزويدي بطرق الدفع للبدء.`;
+
+                // 4. فتح الواتساب
+                window.open(`https://wa.me/966548774184?text=${encodeURIComponent(msg)}`, '_blank');
+                
+                // 5. تفريغ السلة بعد نجاح الطلب
+                cart = [];
+                localStorage.removeItem('pure_cart');
+                updateCartUI();
+                toggleCart();
+
+            } catch (e) {
+                console.error("خطأ في تسجيل الطلب: ", e);
+                alert("عذراً، حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.");
+            }
+        }
         // الكود المحدث لطلب البيانات عند فتح الصفحة
         window.onload = () => { 
             applyTheme(); 
