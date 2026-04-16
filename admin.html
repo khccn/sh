@@ -3,120 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم - بيور ديزاين</title>
+    <title>مركز التحكم - بيور ديزاين</title>
     <link rel="icon" href="888888.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #8e735b; --bg: #f8f5f2; --text: #2d3436; --white: #ffffff; --success: #27ae60; --danger: #d63031; --warning: #f39c12; }
+        :root { --primary: #8e735b; --bg: #f8f5f2; --text: #2d3436; --white: #ffffff; --success: #27ae60; --danger: #d63031; --warning: #f39c12; --blue: #3498db; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--text); }
         .container { max-width: 1100px; margin: 0 auto; display: none; }
-        
         .header { text-align: center; margin-bottom: 30px; position: relative; }
-        .admin-logo { width: 120px; margin-bottom: 10px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1)); }
+        .admin-logo { width: 100px; margin-bottom: 10px; }
         .logout-btn { position: absolute; left: 0; top: 10px; background: var(--danger); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
         
-        .card { background: var(--white); padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border: 1px solid rgba(142, 115, 91, 0.1); }
+        .card { background: var(--white); padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
         h3 { margin-top: 0; border-bottom: 2px solid var(--bg); padding-bottom: 10px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
         
+        /* محرك البحث */
+        .search-box { position: relative; margin-bottom: 20px; }
+        .search-box input { padding: 12px 45px 12px 12px; border: 1px solid #ddd; border-radius: 10px; width: 100%; box-sizing: border-box; font-size: 16px; }
+        .search-box i { position: absolute; right: 15px; top: 15px; color: #999; }
+
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 15px; text-align: right; border-bottom: 1px solid #eee; }
-        th { background: #fafafa; color: var(--primary); font-weight: 600; }
+        th { background: #fafafa; color: var(--primary); }
         
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        input, select, textarea { padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; font-size: 14px; width: 100%; box-sizing: border-box; }
-        textarea { resize: vertical; min-height: 80px; grid-column: 1 / -1; }
-        
-        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; font-family: inherit; }
-        .btn-add { background: var(--success); color: white; justify-content: center; font-size: 16px; grid-column: 1 / -1; }
-        .btn-edit { background: var(--primary); color: white; }
-        
-        .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block;}
+        .btn-circle { width: 35px; height: 35px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; border: none; cursor: pointer; color: white; transition: 0.2s; margin: 0 2px; }
+        .status-badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
         .status-new { background: #fff3cd; color: #856404; }
         .status-done { background: #d4edda; color: #155724; }
 
-        .action-btns { display: flex; gap: 10px; align-items: center; }
-        .btn-circle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; font-size: 14px; transition: 0.2s; }
+        /* النوافذ المنبثقة */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 3000; backdrop-filter: blur(5px); }
+        .modal-box { background: white; padding: 30px; border-radius: 20px; width: 450px; max-width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .order-item-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #eee; }
 
-        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 2000; }
-        .login-box { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); text-align: center; width: 320px; }
-
-        /* تنسيق نافذة التعديل المنبثقة */
-        #edit-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 3000; backdrop-filter: blur(5px); }
-        .edit-box { background: white; padding: 30px; border-radius: 15px; width: 400px; max-width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; flex-direction: column; gap: 12px; }
+        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 4000; }
+        .login-box { background: white; padding: 40px; border-radius: 25px; text-align: center; width: 320px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
 
 <div id="login-overlay">
     <div class="login-box">
-        <img src="82433.png" alt="Pure Design" style="width: 100px; margin-bottom: 20px;">
-        <h2 style="color:var(--primary)">🔒 دخول الإدارة</h2>
-        <input type="email" id="admin-email" placeholder="البريد الإلكتروني" style="margin-bottom:15px;">
-        <input type="password" id="admin-pass" placeholder="كلمة المرور" style="margin-bottom:20px;" onkeypress="handleEnter(event)">
-        <button class="btn btn-edit" onclick="checkPass()" style="width:100%; justify-content:center;">دخول</button>
+        <img src="82433.png" style="width: 80px; margin-bottom: 20px;">
+        <h2 style="color:var(--primary)">دخول الإدارة</h2>
+        <input type="email" id="admin-email" placeholder="البريد الإلكتروني" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;">
+        <input type="password" id="admin-pass" placeholder="كلمة المرور" style="width:100%; padding:12px; margin-bottom:20px; border:1px solid #ddd; border-radius:8px;" onkeypress="if(event.key==='Enter')checkPass()">
+        <button onclick="checkPass()" style="width:100%; padding:12px; background:var(--primary); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">دخول</button>
     </div>
 </div>
 
-<div id="edit-modal-overlay">
-    <div class="edit-box">
-        <h3 style="margin-bottom: 10px;"><i class="fas fa-edit"></i> تعديل بيانات المنتج</h3>
+<div id="edit-modal-overlay" class="modal-overlay">
+    <div class="modal-box">
+        <h3><i class="fas fa-edit"></i> تعديل المنتج</h3>
         <input type="hidden" id="edit-p-id">
-        <input type="text" id="edit-p-name" placeholder="اسم المنتج">
-        <input type="number" id="edit-p-price" placeholder="السعر">
-        <input type="text" id="edit-p-cat" placeholder="القسم">
-        <input type="text" id="edit-p-img" placeholder="اسم الصورة">
-        <textarea id="edit-p-desc" placeholder="الوصف" style="min-height: 80px;"></textarea>
-        <div style="display: flex; gap: 10px; margin-top: 10px;">
-            <button class="btn btn-edit" style="flex: 1; justify-content: center;" onclick="saveProductEdit()"><i class="fas fa-save"></i> حفظ التعديلات</button>
-            <button class="btn" style="flex: 1; justify-content: center; background: #ccc; color: #333;" onclick="closeEditModal()"><i class="fas fa-times"></i> إلغاء</button>
-        </div>
+        <input type="text" id="edit-p-name" placeholder="اسم المنتج" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;">
+        <input type="number" id="edit-p-price" placeholder="السعر" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;">
+        <input type="text" id="edit-p-cat" placeholder="القسم" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;">
+        <input type="text" id="edit-p-img" placeholder="اسم الصورة" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;">
+        <textarea id="edit-p-desc" placeholder="الوصف" style="width:100%; padding:12px; margin-bottom:15px; border:1px solid #ddd; border-radius:8px; height:80px;"></textarea>
+        <button onclick="saveProductEdit()" style="width:100%; padding:12px; background:var(--success); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold; margin-bottom:10px;">حفظ التعديلات</button>
+        <button onclick="closeModal('edit-modal-overlay')" style="width:100%; padding:12px; background:#eee; color:#333; border:none; border-radius:8px; cursor:pointer;">إلغاء</button>
+    </div>
+</div>
+
+<div id="order-modal-overlay" class="modal-overlay">
+    <div class="modal-box">
+        <h3 id="modal-order-title" style="color:var(--primary)">تفاصيل الطلب</h3>
+        <div id="order-details-content"></div>
+        <hr style="border:none; border-top:1px solid #eee; margin:20px 0;">
+        <button onclick="closeModal('order-modal-overlay')" style="width:100%; padding:12px; background:var(--primary); color:white; border:none; border-radius:8px; cursor:pointer;">إغلاق</button>
     </div>
 </div>
 
 <div class="container" id="main-content">
     <div class="header">
-        <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> خروج</button>
-        <img src="82433.png" alt="Logo" class="admin-logo">
-        <h1>لـوحـة الـتـحـكـم</h1>
+        <button class="logout-btn" onclick="logout()">خروج</button>
+        <img src="82433.png" class="admin-logo">
+        <h1>لوحة التحكم</h1>
     </div>
 
     <div class="card">
-        <h3><i class="fas fa-plus-circle"></i> إضافة خدمة/منتج جديد</h3>
-        <div class="form-grid">
-            <input type="text" id="new-p-name" placeholder="اسم المنتج">
-            <input type="number" id="new-p-price" placeholder="السعر">
-            <input list="categories-list" id="new-p-cat" placeholder="القسم">
-            <datalist id="categories-list">
-                <option value="خدمات رقمية">
-                <option value="متاجر إلكترونية">
-                <option value="دعوات">
-                <option value="ألعاب">
-                <option value="بشارات">
-            </datalist>
-            <input type="text" id="new-p-img" placeholder="اسم الصورة (مثلاً: Born.jpg)">
-            <textarea id="new-p-desc" placeholder="وصف المنتج التفصيلي"></textarea>
-            <button class="btn btn-add" onclick="addNewProduct()"><i class="fas fa-cloud-upload-alt"></i> إدراج في المتجر</button>
+        <h3><i class="fas fa-plus-circle"></i> إضافة منتج جديد</h3>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px;">
+            <input type="text" id="new-p-name" placeholder="اسم المنتج" style="padding:12px; border:1px solid #ddd; border-radius:8px;">
+            <input type="number" id="new-p-price" placeholder="السعر" style="padding:12px; border:1px solid #ddd; border-radius:8px;">
+            <input list="cats" id="new-p-cat" placeholder="القسم" style="padding:12px; border:1px solid #ddd; border-radius:8px;">
+            <datalist id="cats"><option value="خدمات رقمية"><option value="بشارات"><option value="دعوات"></datalist>
+            <input type="text" id="new-p-img" placeholder="اسم الصورة" style="padding:12px; border:1px solid #ddd; border-radius:8px;">
+            <textarea id="new-p-desc" placeholder="وصف المنتج" style="grid-column: 1/-1; padding:12px; border:1px solid #ddd; border-radius:8px; height:60px;"></textarea>
+            <button onclick="addNewProduct()" style="grid-column: 1/-1; padding:12px; background:var(--success); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">إدراج في المتجر</button>
         </div>
     </div>
 
     <div class="card">
-        <h3><i class="fas fa-list-ul"></i> إدارة المنتجات</h3>
+        <h3><i class="fas fa-box"></i> إدارة المنتجات</h3>
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="product-search" placeholder="ابحث عن منتج بالاسم أو القسم..." oninput="filterProductsTable()">
+        </div>
         <table id="products-table">
-            <thead>
-                <tr>
-                    <th>المنتج</th>
-                    <th>القسم</th>
-                    <th>السعر</th>
-                    <th>العمليات</th>
-                </tr>
-            </thead>
+            <thead><tr><th>المنتج</th><th>القسم</th><th>السعر</th><th>العمليات</th></tr></thead>
             <tbody id="products-body"></tbody>
         </table>
     </div>
 
     <div class="card">
         <h3><i class="fas fa-history"></i> سجل الطلبات الحديثة</h3>
-        <div id="orders-list"></div>
+        <table id="orders-table">
+            <thead><tr><th>التاريخ</th><th>رقم الطلب</th><th>الإجمالي</th><th>العمليات</th></tr></thead>
+            <tbody id="orders-body"></tbody>
+        </table>
     </div>
 </div>
 
@@ -138,9 +134,8 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    window.allProducts = []; // 🌟 مصفوفة ذكية لحفظ بيانات المنتجات لتسهيل التعديل
-
-    window.handleEnter = function(e) { if (e.key === 'Enter') checkPass(); }
+    window.allProducts = [];
+    window.allOrders = [];
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -149,150 +144,123 @@
             loadData();
         } else {
             document.getElementById('login-overlay').style.display = 'flex';
-            document.getElementById('main-content').style.display = 'none';
         }
     });
 
-    window.checkPass = async function() {
-        const email = document.getElementById('admin-email').value;
-        const pass = document.getElementById('admin-pass').value;
-        try { await signInWithEmailAndPassword(auth, email, pass); } catch (e) { alert("بيانات الدخول غير صحيحة!"); }
-    }
+    window.checkPass = async () => {
+        const e = document.getElementById('admin-email').value;
+        const p = document.getElementById('admin-pass').value;
+        try { await signInWithEmailAndPassword(auth, e, p); } catch { alert("خطأ في البيانات!"); }
+    };
 
-    window.logout = function() { signOut(auth).then(() => alert("خرجت بنجاح")); }
+    window.logout = () => signOut(auth);
 
     async function loadData() {
-        // المنتجات
         const pSnap = await getDocs(collection(db, "products"));
-        const pBody = document.getElementById('products-body');
-        pBody.innerHTML = "";
-        window.allProducts = []; // تصفير المصفوفة
+        window.allProducts = [];
+        pSnap.forEach(d => window.allProducts.push({docId: d.id, ...d.data()}));
+        renderProductsTable(window.allProducts);
 
-        pSnap.forEach(d => {
-            const p = d.data();
-            window.allProducts.push({ docId: d.id, ...p }); // حفظ البيانات لاستخدامها وقت التعديل
-            
-            pBody.innerHTML += `<tr>
-                <td><strong>${p.name}</strong></td>
-                <td><span class="status-badge" style="background:#eee;">${p.category}</span></td>
-                <td style="font-weight:bold; color:var(--primary);">${p.price} ريال</td>
-                <td class="action-btns">
-                    <button class="btn-circle btn-edit" title="تعديل شامل" onclick="openEditModal('${d.id}')"><i class="fas fa-pen"></i></button>
-                    <button class="btn-circle" style="background:var(--danger); color:white" title="حذف" onclick="deleteProduct('${d.id}')"><i class="fas fa-trash"></i></button>
-                </td>
-            </tr>`;
-        });
-
-        // الطلبات
         const oSnap = await getDocs(collection(db, "orders"));
-        let ordersArray = [];
-        oSnap.forEach(d => ordersArray.push({id: d.id, ...d.data()}));
-        ordersArray.sort((a,b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+        window.allOrders = [];
+        oSnap.forEach(d => window.allOrders.push({docId: d.id, ...d.data()}));
+        window.allOrders.sort((a,b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+        renderOrdersTable();
+    }
 
-        let html = "<table><tr><th>التاريخ</th><th>رقم الطلب</th><th>الإجمالي</th><th>الحالة والتحكم</th></tr>";
-        ordersArray.forEach(o => {
-            const date = o.createdAt ? o.createdAt.toDate().toLocaleString('ar-SA') : 'جديد';
-            const statusClass = o.status === 'مكتمل' ? 'status-done' : 'status-new';
-            const orderNum = o.orderNumber || o.id.substring(0,5);
-            
-            html += `<tr>
-                <td>${date}</td>
-                <td style="font-weight:bold;">#${orderNum}</td>
-                <td style="color:var(--primary); font-weight:bold;">${o.total}</td>
-                <td class="action-btns">
-                    <span class="status-badge ${statusClass}">${o.status || 'جديد'}</span>
-                    <button class="btn-circle" style="background:var(--success); color:white" title="تم التنفيذ" onclick="updateStatus('${o.id}', 'مكتمل')"><i class="fas fa-check"></i></button>
-                    <button class="btn-circle" style="background:var(--warning); color:white" title="تراجع (إعادة لجديد)" onclick="updateStatus('${o.id}', 'جديد')"><i class="fas fa-times"></i></button>
+    function renderProductsTable(data) {
+        const tbody = document.getElementById('products-body');
+        tbody.innerHTML = data.map(p => `
+            <tr style="opacity: ${p.isHidden ? '0.5' : '1'}">
+                <td>${p.name} ${p.isHidden ? '<small>(مخفي)</small>' : ''}</td>
+                <td><span class="status-badge" style="background:#eee">${p.category}</span></td>
+                <td><b>${p.price} ريال</b></td>
+                <td>
+                    <button class="btn-circle" style="background:var(--blue)" onclick="openEditModal('${p.docId}')"><i class="fas fa-pen"></i></button>
+                    <button class="btn-circle" style="background:${p.isHidden ? '#999' : 'var(--warning)'}" onclick="toggleHide('${p.docId}', ${p.isHidden})"><i class="fas ${p.isHidden ? 'fa-eye-slash' : 'fa-eye'}"></i></button>
+                    <button class="btn-circle" style="background:var(--danger)" onclick="deleteProduct('${p.docId}')"><i class="fas fa-trash"></i></button>
                 </td>
-            </tr>`;
+            </tr>
+        `).join('');
+    }
+
+    window.filterProductsTable = () => {
+        const term = document.getElementById('product-search').value.toLowerCase();
+        const filtered = window.allProducts.filter(p => p.name.toLowerCase().includes(term) || p.category.toLowerCase().includes(term));
+        renderProductsTable(filtered);
+    };
+
+    function renderOrdersTable() {
+        const tbody = document.getElementById('orders-body');
+        tbody.innerHTML = window.allOrders.map(o => `
+            <tr>
+                <td><small>${o.createdAt?.toDate().toLocaleString('ar-SA') || 'جديد'}</small></td>
+                <td><button style="border:none; background:none; color:var(--blue); cursor:pointer; font-weight:bold" onclick="viewOrderDetails('${o.docId}')">#${o.orderNumber || o.docId.substring(0,5)}</button></td>
+                <td style="color:var(--success)"><b>${o.total}</b></td>
+                <td>
+                    <span class="status-badge ${o.status === 'مكتمل' ? 'status-done' : 'status-new'}">${o.status || 'جديد'}</span>
+                    <button class="btn-circle" style="background:var(--success)" onclick="updateStatus('${o.docId}', 'مكتمل')"><i class="fas fa-check"></i></button>
+                    <button class="btn-circle" style="background:var(--danger)" onclick="deleteOrder('${o.docId}')"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    window.viewOrderDetails = (id) => {
+        const o = window.allOrders.find(x => x.docId === id);
+        document.getElementById('modal-order-title').innerText = "تفاصيل طلب #" + (o.orderNumber || id.substring(0,5));
+        let html = "";
+        o.items.forEach(item => {
+            html += `<div class="order-item-row"><span>${item.name} (x${item.quantity})</span><b>${item.price * item.quantity} ريال</b></div>`;
         });
-        document.getElementById('orders-list').innerHTML = html + "</table>";
-    }
+        html += `<div style="margin-top:15px; text-align:left; font-size:1.2em; color:var(--primary)"><b>الإجمالي: ${o.total}</b></div>`;
+        document.getElementById('order-details-content').innerHTML = html;
+        document.getElementById('order-modal-overlay').style.display = 'flex';
+    };
 
-    // 🌟 وظائف التعديل الشامل الجديدة 🌟
-    window.openEditModal = function(docId) {
-        // البحث عن بيانات المنتج من المصفوفة الذكية
-        const p = window.allProducts.find(x => x.docId === docId);
-        if(!p) return;
-        
-        // تعبئة البيانات في النافذة
-        document.getElementById('edit-p-id').value = docId;
-        document.getElementById('edit-p-name').value = p.name || '';
-        document.getElementById('edit-p-price').value = p.price || '';
-        document.getElementById('edit-p-cat').value = p.category || '';
-        document.getElementById('edit-p-img').value = p.image || '';
-        document.getElementById('edit-p-desc').value = p.desc || '';
-        
-        // إظهار النافذة
+    window.closeModal = (id) => document.getElementById(id).style.display = 'none';
+
+    window.addNewProduct = async () => {
+        const data = {
+            id: Math.floor(10000 + Math.random() * 90000),
+            name: document.getElementById('new-p-name').value,
+            price: Number(document.getElementById('new-p-price').value),
+            category: document.getElementById('new-p-cat').value,
+            image: document.getElementById('new-p-img').value,
+            desc: document.getElementById('new-p-desc').value,
+            isHidden: false, hasOptions: false
+        };
+        await addDoc(collection(db, "products"), data);
+        alert("تمت الإضافة!"); loadData();
+    };
+
+    window.toggleHide = async (id, current) => { await updateDoc(doc(db, "products", id), {isHidden: !current}); loadData(); };
+    window.updateStatus = async (id, s) => { await updateDoc(doc(db, "orders", id), {status: s}); loadData(); };
+    window.deleteOrder = async (id) => { if(confirm("حذف الطلب نهائياً؟")) { await deleteDoc(doc(db, "orders", id)); loadData(); } };
+    window.deleteProduct = async (id) => { if(confirm("حذف المنتج نهائياً؟")) { await deleteDoc(doc(db, "products", id)); loadData(); } };
+
+    window.openEditModal = (id) => {
+        const p = window.allProducts.find(x => x.docId === id);
+        document.getElementById('edit-p-id').value = id;
+        document.getElementById('edit-p-name').value = p.name;
+        document.getElementById('edit-p-price').value = p.price;
+        document.getElementById('edit-p-cat').value = p.category;
+        document.getElementById('edit-p-img').value = p.image;
+        document.getElementById('edit-p-desc').value = p.desc;
         document.getElementById('edit-modal-overlay').style.display = 'flex';
-    }
+    };
 
-    window.closeEditModal = function() {
-        document.getElementById('edit-modal-overlay').style.display = 'none';
-    }
-
-    window.saveProductEdit = async function() {
+    window.saveProductEdit = async () => {
         const id = document.getElementById('edit-p-id').value;
-        const btn = event.currentTarget;
-        const originalText = btn.innerHTML;
-        btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> جاري الحفظ...";
-
-        try {
-            await updateDoc(doc(db, "products", id), {
-                name: document.getElementById('edit-p-name').value,
-                price: Number(document.getElementById('edit-p-price').value),
-                category: document.getElementById('edit-p-cat').value,
-                image: document.getElementById('edit-p-img').value,
-                desc: document.getElementById('edit-p-desc').value
-            });
-            
-            closeEditModal();
-            loadData(); // تحديث الجدول فوراً
-            alert("تم حفظ التعديلات بنجاح! سينعكس ذلك في المتجر فوراً ✨");
-        } catch(e) {
-            alert("حدث خطأ أثناء حفظ التعديلات.");
-            btn.innerHTML = originalText;
-        }
-    }
-
-    window.addNewProduct = async function() {
-        const name = document.getElementById('new-p-name').value;
-        const price = document.getElementById('new-p-price').value;
-        const cat = document.getElementById('new-p-cat').value;
-        const img = document.getElementById('new-p-img').value;
-        const desc = document.getElementById('new-p-desc').value;
-
-        if(!name || !price || !img || !cat) return alert("يرجى تعبئة الخانات الأساسية!");
-
-        try {
-            await addDoc(collection(db, "products"), {
-                id: Math.floor(10000 + Math.random() * 90000),
-                name, price: Number(price), category: cat, image: img, desc: desc || "لا يوجد وصف.", hasOptions: false
-            });
-            
-            // تفريغ الخانات بعد الإضافة
-            document.getElementById('new-p-name').value = '';
-            document.getElementById('new-p-price').value = '';
-            document.getElementById('new-p-cat').value = '';
-            document.getElementById('new-p-img').value = '';
-            document.getElementById('new-p-desc').value = '';
-            
-            alert("تمت الإضافة بنجاح!");
-            loadData();
-        } catch(e) { alert("حدث خطأ!"); }
-    }
-
-    window.updateStatus = async function(id, newStatus) {
-        await updateDoc(doc(db, "orders", id), { status: newStatus });
-        loadData();
-    }
-
-    window.deleteProduct = async function(id) {
-        if(confirm("هل أنت متأكد من حذف هذا المنتج نهائياً؟")) { 
-            await deleteDoc(doc(db, "products", id)); 
-            loadData(); 
-        }
-    }
+        await updateDoc(doc(db, "products", id), {
+            name: document.getElementById('edit-p-name').value,
+            price: Number(document.getElementById('edit-p-price').value),
+            category: document.getElementById('edit-p-cat').value,
+            image: document.getElementById('edit-p-img').value,
+            desc: document.getElementById('edit-p-desc').value
+        });
+        closeModal('edit-modal-overlay'); loadData();
+    };
 </script>
 </body>
 </html>
