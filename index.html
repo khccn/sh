@@ -692,12 +692,15 @@
                 const docRef = await window.addDoc(window.collection(window.db, "orders"), orderData);
                 const orderId = docRef.id.substring(0, 5).toUpperCase(); 
 
-                // 3. تجهيز رسالة الواتساب
-                let msg = `طلب جديد من المتجر ✨\nرقم الطلب: #${orderId}\n\nالخدمات المطلوبة:\n`;
+                // 3. تجهيز رسالة الواتساب (بدون إيموجي لتفادي الأخطاء)
+                let msg = "أهلاً متجر بيور، طلب جديد:\n";
+                msg += "رقم الطلب: #" + orderId + "\n\n";
+                msg += "الخدمات المطلوبة:\n";
                 cart.forEach(i => {
-                    msg += `- ${i.name} (الكمية: ${i.quantity})\n`;
+                    msg += "- " + i.name + " (الكمية: " + i.quantity + ")\n";
                 });
-                msg += `\nالإجمالي: ${orderData.total}\n\nالرجاء تزويدي بطرق الدفع للبدء.`;
+                msg += "\nالإجمالي: " + orderData.total + "\n\n";
+                msg += "الرجاء تزويدي بطرق الدفع للبدء.";
 
                 // 4. فتح الواتساب
                 window.open(`https://wa.me/966548774184?text=${encodeURIComponent(msg)}`, '_blank');
