@@ -715,20 +715,15 @@
             }
 
             try {
-                showToast("جاري تسجيل طلبك... ⏳");
+                showToast("جاري تسجيل طلبك وتحويلك للواتساب... ⏳");
                 const numericOrderNumber = Math.floor(10000 + Math.random() * 90000);
 
-                // حفظ بيانات العميل في قاعدة بيانات مستقلة للتسويق لاحقاً
-                await window.addDoc(window.collection(window.db, "customers"), {
-                    name: custName,
-                    phone: custPhone,
-                    joinedAt: window.serverTimestamp()
-                });
+                // 🌟 قمنا بمسح الكود المسبب للمشكلة هنا، واكتفينا بحفظ البيانات داخل الطلب نفسه!
 
                 const orderData = {
                     orderNumber: numericOrderNumber,
-                    customerName: custName,
-                    customerPhone: custPhone,
+                    customerName: custName,     // تم حفظ اسم العميل هنا
+                    customerPhone: custPhone,   // تم حفظ جوال العميل هنا
                     items: cart,
                     total: document.getElementById('cart-total-price').innerText,
                     status: "جديد",
@@ -755,7 +750,7 @@
 
             } catch (e) {
                 console.error("خطأ في الطلب: ", e);
-                alert("حدث خطأ بسيط. يرجى المحاولة مرة أخرى.");
+                alert("حدث خطأ بسيط في الاتصال. يرجى المحاولة مرة أخرى.");
             }
         }
 
