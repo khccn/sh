@@ -714,6 +714,13 @@
                 return;
             }
 
+            // 🌟 جدار حماية رقم الجوال (يجب أن يبدأ بـ 05 ويتكون من 10 أرقام بالضبط)
+            const phoneRegex = /^05\d{8}$/;
+            if (!phoneRegex.test(custPhone)) {
+                alert("⚠️ عذراً، رقم الجوال غير صحيح! يجب أن يبدأ بـ 05 ويتكون من 10 أرقام فقط.");
+                return;
+            }
+
             try {
                 showToast("جاري تسجيل طلبك وتحويلك للواتساب... ⏳");
                 const numericOrderNumber = Math.floor(10000 + Math.random() * 90000);
